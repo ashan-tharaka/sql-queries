@@ -70,3 +70,97 @@ insert into Orders values('70012',250.45,'2015-06-27','3008','5002');
 insert into Orders values('70011',75.29,'2015-08-17','3003','5007');
 insert into Orders values('70013',3045.6,'2015-04-25','3002','5001');
 insert into Orders values('70014',5000,'2015-04-25','3001','5001');
+
+
+-- 1
+select * from Orders
+select AVG(purch_amt) as Average_Purchase_Amount
+from orders;
+-- 2
+select COUNT(*)
+from salesman
+
+select count(distinct salesman_id) from Orders;
+-- 3
+SELECT COUNT(*) 
+FROM customer
+WHERE grade>=200;
+-- 4
+SELECT MAX(purch_amt)
+FROM Orders;
+-- 5
+SELECT o.ord_no,c.cust_name
+FROM customer c INNER JOIN Orders o 
+ON o.customer_id=c.c_id;
+-- 6
+
+SELECT customer_id,max(purch_amt)
+FROM Orders
+WHERE customer_id>=3002 AND customer_id<=3007
+GROUP BY customer_id;
+
+-- 7
+SELECT COUNT(*) 
+FROM Orders
+WHERE ord_date="2015-08-17";
+-- 8
+SELECT ord_date,salesman_id,COUNT(*)
+FROM Orders
+GROUP BY ord_date,salesman_id;
+-- 9
+SELECT c.cust_name,s.FirstName,s.LastName,s.city
+FROM salesman s INNER JOIN Orders o ON s.s_id=o.salesman_id
+INNER JOIN customer c ON c.c_id=o.customer_id WHERE s.city=c.city;
+
+
+SELECT c.cust_name,s.FirstName,s.LastName,s.city
+FROM salesman s, Orders o ,customer c   WHERE s.city=c.city AND 
+s.s_id=o.salesman_id AND c.c_id=o.customer_id;
+
+-- 10
+SELECT c.cust_name,s.FirstName,s.LastName,s.city 'salesman city',c.city 'customer city'
+FROM salesman s INNER JOIN Orders o ON s.s_id=o.salesman_id
+INNER JOIN customer c ON c.c_id=o.customer_id WHERE s.city!=c.city;
+
+SELECT c.cust_name,s.FirstName,s.LastName,s.city
+FROM salesman s, Orders o ,customer c   WHERE s.city<>c.city AND 
+s.s_id=o.salesman_id AND c.c_id=o.customer_id;
+
+-- 11
+SELECT c.cust_name,c.city,s.FirstName,s.LastName,s.commission
+FROM salesman s, Orders o ,customer c
+WHERE s.s_id=o.salesman_id AND c.c_id=o.customer_id AND s.commission BETWEEN 
+0.12 AND 0.14
+-- 12
+SELECT o.ord_no,c.cust_name,s.commission,s.commission*o.purch_amt 'earned commmission amount'
+FROM salesman s, Orders o ,customer c
+WHERE s.s_id=o.salesman_id AND c.c_id=o.customer_id AND c.grade>200;
+-- 13
+
+SELECT customer_id,ord_date,purch_amt
+FROM Orders
+WHERE (customer_id,purch_amt) IN
+(
+SELECT customer_id,MAX(purch_amt)
+FROM Orders GROUP BY customer_id);
+
+-- 14
+SELECT customer_id,ord_date,purch_amt
+FROM Orders WHERE(ord_date,purch_amt)IN(
+SELECT ord_date,MAX(purch_amt)
+FROM Orders GROUP BY ord_date
+HAVING MAX(purch_amt)>2000)
+
+-- 15
+
+SELECT AVG(Salary),grade
+FROM salesman 
+GROUP By grade
+
+SELECT o.* FROM salesman s1,Orders o
+WHERE s1.s_id=o.salesman_id AND salary<
+(
+SELECT AVG(Salary)
+FROM salesman s2
+WHERE s2.grade=s1.grade
+)
