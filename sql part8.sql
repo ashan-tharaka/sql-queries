@@ -48,3 +48,35 @@ insert into Register values('S004','M002','2021-03-08');
 insert into Register values('S004','M003','2021-03-11');
 
 
+SELECT studentName FROM Student WHERE   POSITION("5" IN regNo)=3;
+-- 2
+SELECT distinct s.studentName FROM Student s,Module m ,Register r 
+WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID AND (m.moduleName='DBMS' OR m.moduleName='Software');
+
+-- 3
+SELECT  s.studentName FROM Student s,Module m ,Register r 
+WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID 
+AND m.moduleName='Hardware' AND s.studentName =(
+SELECT  distinct s.studentName FROM Student s,Module m ,Register r 
+WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID 
+AND m.moduleName='Software' );
+
+SELECT studentName FROM Student 
+WHERE studentID=(
+SELECT  r.studentID FROM Register r INNER JOIN Module m
+ON r.moduleID=m.moduleID WHERE m.moduleName="Software" AND m.moduleName="Hardware");
+
+--  4
+SELECT m.moduleName FROM Module m LEFT OUTER JOIN Register r
+ON m.moduleID=r.moduleID WHERE r.moduleID is null;
+
+
+
+-- 5
+SELECT studentName FROM Student where gpa<
+(
+SELECT AVG(gpa) FROM Student
+);
+
+
+
