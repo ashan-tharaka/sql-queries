@@ -29,6 +29,10 @@ insert into Account values
 ('A004',50000,'T004'),
 ('A005',60000,'T005');
 
+
+SELECT * FROM Account;
+SELECT * FROM AccType;
+
 -- inner join
 
 SELECT *
@@ -73,6 +77,11 @@ WHERE t.typeID is null;
 SELECT *
 FROM AccType AS t  natural join Account AS a ;
 
+SELECT Account AS a natural join AccType AS t;
+
+
 -- cross join
 SELECT *
 FROM AccType AS t  cross join Account AS a ;
+
+SELECT * FROM Account a cross join AccType t;
