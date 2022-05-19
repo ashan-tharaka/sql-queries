@@ -48,38 +48,60 @@ insert into Register values('S004','M002','2021-03-08');
 insert into Register values('S004','M003','2021-03-11');
 
 
-SELECT studentName FROM Student WHERE   POSITION("5" IN regNo)=3;
+
+SELECT * FROM Student;
+SElECT * FROM Module;
+SELECT * FROM Register;
+
+-- 1
+SELECT studentName
+FROM Student
+WHERE regNo LIKE '__5____';
 -- 2
-SELECT distinct s.studentName FROM Student s,Module m ,Register r 
-WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID AND (m.moduleName='DBMS' OR m.moduleName='Software');
+
+SELECT DISTINCT s.studentName
+FROM Register r INNER JOIN Module m
+ON r.moduleID=m.moduleID INNER JOIN Student s
+ON r.studentID=s.studentID
+WHERE m.moduleName='DBMS' OR m.moduleName='Software';
+
+SELECT DISTINCT s.studentName
+FROM Register r ,Module m,Student s
+WHERE r.moduleID=m.moduleID AND  r.studentID=s.studentID AND ( m.moduleName='DBMS' OR m.moduleName='Software');
 
 -- 3
-SELECT   s.studentName FROM Student s,Module m ,Register r 
-WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID 
-AND m.moduleName='Hardware' 
-AND s.studentID IN(
-SELECT   s.studentID FROM Student s,Module m ,Register r 
-WHERE s.studentID=r.studentID AND m.moduleID=r.moduleID 
-AND m.moduleName='Software');
+SELECT s.studentName
+FROM Register r ,Module m,Student s
+WHERE  m.moduleName='Hardware' AND r.moduleID=m.moduleID AND  r.studentID=s.studentID
+AND s.studentID IN
+(
+SELECT s.studentID
+FROM Register r ,Module m,Student s
+WHERE  m.moduleName='Software' AND r.moduleID=m.moduleID AND  r.studentID=s.studentID);
 
-
-
-SELECT studentName FROM Student 
-WHERE studentID=(
-SELECT  r.studentID FROM Register r INNER JOIN Module m
-ON r.moduleID=m.moduleID WHERE m.moduleName="Software" AND m.moduleName="Hardware");
-
---  4
-SELECT m.moduleName FROM Module m LEFT OUTER JOIN Register r
-ON m.moduleID=r.moduleID WHERE r.moduleID is null;
-
+-- 4
+SELECT m.moduleName
+FROM Register r RIGHT OUTER JOIN Module m ON r.moduleID=m.moduleID WHERE r.moduleID is null;
 
 
 -- 5
-SELECT studentName FROM Student where gpa<
+SELECT studentName 
+FROM Student
+WHERE gpa<
 (
-SELECT AVG(gpa) FROM Student
+SELECT AVG(gpa) 
+FROM Student
 );
 
+-- additional
+SELECT studentName 
+FROM Student
+WHERE studentID IN (
+SELECT distinct studentID
+FROM Register
+WHERE moduleID IN(SELECT moduleID
+FROM Register
+WHERE studentID="S001")
+AND studentID!="S001");
 
 
